@@ -93,6 +93,7 @@ function addWord(word){
 	//Current color is green, may change later
 	newPointGeo.colors.push(new THREE.Color(0x00ff00));
 	var points2 = new THREE.Points(newPointGeo, mat);
+	points2.name = word;
 	scene.add(points2);
 
 	//Adding label
@@ -116,6 +117,27 @@ function addWord(word){
 	render();
 
 }
+
+function removeWord(i){
+	//remove from scene
+	var word = texts[i].innerHTML;
+	console.log(word);
+	var object = scene.getObjectByName(word);
+	console.log(object);
+	scene.remove(object);
+
+	//remove from html
+	texts[i].parentNode.removeChild(texts[i]);
+
+	//Remove from lists
+	texts.splice(i, 1);
+	textCoords3D.splice(i,1);
+
+	//redraw
+	render();
+}
+
+
 
 //Get screen coordinates of a 3d point
 function toXYCoords (pos) {

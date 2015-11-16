@@ -2,6 +2,7 @@
 
 var curStr = ''
 var ENTER = 13;
+var DELETE = 46;
 
 //Listen for key down
 document.addEventListener('keydown', function(event) {
@@ -10,6 +11,14 @@ document.addEventListener('keydown', function(event) {
 		console.log(curStr);
 		addWord(curStr);
 		curStr = '';
+	}
+
+	//if delete, delte selected object
+	else if(event.keyCode==DELETE){
+		if(lastInd!=null){
+			 removeWord(lastInd);
+			 lastInd = null;
+		}
 	}
 
 	//Otherwise, assume letter, add to word string. 
