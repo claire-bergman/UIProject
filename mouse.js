@@ -2,6 +2,9 @@
 
 lastInd = null;
 document.addEventListener('click', onMouseDown, false);
+document.addEventListener("mousewheel", onMouseWheel, false);
+document.addEventListener("DOMMouseScroll", onMouseWheel, false);
+
 
 function onMouseDown(e) {
 
@@ -44,4 +47,13 @@ function onMouseDown(e) {
     }*/
 
     
+}
+
+function onMouseWheel(e){
+	var delta = e.detail? e.detail*-2: e.wheelDelta/20.0;
+	console.log(delta);
+	camera.position.z -= delta;
+	updateText();
+	e.preventDefault();
+	return false;
 }
