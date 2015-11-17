@@ -26,7 +26,8 @@ function setUpScene(){
 
 
 	camera.position.z = 100;
-
+	camera.lookAt(new THREE.Vector3(0, 0, 0))
+	camera.target = new THREE.Vector3(0,0,0)
 
 	//Creating scatter plot
 	var scatterPlot = new THREE.Object3D();
@@ -99,6 +100,8 @@ function addWord(word){
 			}
 		}
 		return example
+	} else {
+		document.getElementById('tip').innerHTML = "great! use leap motion to navigate"
 	}
 
 	var newPoint = new THREE.Vector3(dictionary[word][0],
@@ -107,9 +110,9 @@ function addWord(word){
 	newPointGeo.vertices.push(newPoint);
 	//Current color is green, may change later
 	newPointGeo.colors.push(new THREE.Color('rgb('
-		+ parseInt(dictionary[word][0] * 255) + ','
-		+ parseInt(dictionary[word][1] * 255) + ','
-		+ parseInt(dictionary[word][2] * 255) + ')'));
+		+ parseInt(Math.abs(dictionary[word][0]) * 255) + ','
+		+ parseInt(Math.abs(dictionary[word][1]) * 255) + ','
+		+ parseInt(Math.abs(dictionary[word][2]) * 255) + ')'));
 	var points2 = new THREE.Points(newPointGeo, mat);
 	points2.name = word;
 	scene.add(points2);
@@ -128,6 +131,21 @@ function addWord(word){
 	text2.style.left = (6 + vec.x) + 'px';
 	texts.push(text2);
 	textCoords3D.push(newPoint);
+
+	// orient camera
+	var tween = new TWEEN.Tween(camera.target).to({
+    x: newPoint.x,
+    y: newPoint.y,
+    z: newPoint.z
+	}, 1000).easing(TWEEN.Easing.Exponential.Out).onUpdate(function () {
+		camera.lookAt(new THREE.Vector3(this.x, this.y, this.z))
+		updateText()
+	}).onComplete(function () {
+    camera.lookAt(newPoint)
+		updateText()
+	}).start()
+
+	requestAnimationFrame(animate)
 
 	render();
 
@@ -189,7 +207,6 @@ function updateText(){
 
 
 	for (var i=0; i<texts.length; i++){
-			console.log("updating");
 		var vec = toXYCoords(textCoords3D[i]);
 		texts[i].style.top = vec.y + 'px';
 		texts[i].style.left = vec.x + 'px';
@@ -198,6 +215,10 @@ function updateText(){
 
 }
 
+function animate(time) {
+	requestAnimationFrame(animate)
+	TWEEN.update(time)
+}
 
 
 //"main function"
