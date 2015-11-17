@@ -68,7 +68,7 @@ function setRotation(roll, pitch, yaw, precision) {
 
 	// Only rotate for a certain axis of hand orientation is significant
 	if (Math.abs(roll) > 0.4 && Math.abs(roll) > Math.abs(pitch) && Math.abs(roll) > Math.abs(yaw)){
-		rotateAroundWorldAxis( scene, zAxis, -roll/precision );
+		rotateAroundWorldAxis( scene, zAxis, roll/precision );
 		if (roll>0)
 			addccwArrow();
 		else

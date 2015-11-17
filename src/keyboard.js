@@ -156,6 +156,7 @@ document.addEventListener('keydown', function(event) {
 		// Backspace to remove a character from the search field
 		case BSPACE:
 			curStr = curStr.substring(0,curStr.length-1);
+			event.preventDefault();
 			break;
 		case CTRL:
 			ctrlDown = true;
