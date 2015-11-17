@@ -191,7 +191,7 @@ function addWord(word){
 // Create a node-word with a consistent schema for better architecture
 function createWord(name, htmlText, coordinates, group) {
 
-	return {name: name, html: htmlText, coordinates: coordinates, group: group}
+	return {name: name, html: htmlText, coordinates: coordinates, group: group, edges: []}
 
 }
 
@@ -204,6 +204,12 @@ function removeWord(i) {
 	var word = words[i].name
 	var object = scene.getObjectByName(word)
 	scene.remove(object)
+
+	//remove associated edges
+	for (var j=0;j<words[i].edges.length; j++){
+		var e = scene.getObjectByName(words[i].edges[j]);
+		scene.remove(e);
+	}
 
 	// Remove from HTML
 	words[i].html.parentNode.removeChild(words[i].html)

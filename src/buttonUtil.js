@@ -4,9 +4,9 @@ var sentences = [];
 //adds a linear sentence based on order items were added
 function addSentence(){
 	var curColor = new THREE.Color('rgb('
-		+ Math.round(Math.random()*255) + ',' 			
-		+ Math.round(Math.random()*255) + ',' 			
-		+ Math.round(Math.random()*255) + ')');	
+		+ Math.round(100+Math.random()*155) + ',' 			
+		+ Math.round(100+Math.random()*155) + ',' 			
+		+ Math.round(100+Math.random()*155) + ')');	
 
 	console.log("sentence");
 	var curSentence = [];
@@ -33,7 +33,10 @@ function addLine(word1, word2, color) {
 	})
 	var axes = new THREE.LineSegments(axisGeo, axisMat)
 	axes.type = THREE.Lines
+	axes.name = word1.name + "-" + word2.name;
 	scene.add(axes)
+	word1.edges.push(axes.name);
+	word2.edges.push(axes.name);
 	return axes;
 
 }
