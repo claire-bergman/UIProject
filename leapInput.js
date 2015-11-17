@@ -33,14 +33,14 @@ Leap.loop(function (frame) {
 function setRotation(roll, pitch, yaw){
 
 	if (Math.abs(roll) > 0.4 && Math.abs(roll) > Math.abs(pitch) && Math.abs(roll) > Math.abs(yaw))
-		rotateAroundWorldAxis( camera, zAxis, roll/30.0 );
+		rotateAroundWorldAxis( scene, zAxis, roll/30.0 );
 		//camera.rotation.z -= roll/30.0;
 		//cameraParent.rotation.z -= roll/30.0;
 	if (Math.abs(pitch) > 0.4 && Math.abs(pitch) > Math.abs(roll) && Math.abs(pitch) > Math.abs(yaw))
-		rotateAroundWorldAxis( camera, xAxis, pitch/30.0 ); //- pitch
+		rotateAroundWorldAxis( scene, xAxis, pitch/30.0 ); //- pitch
 		//camera.rotation.x += pitch/30.0;
 	if (Math.abs(yaw) > 0.4 && Math.abs(yaw) > Math.abs(pitch) && Math.abs(yaw) > Math.abs(roll))
-		rotateAroundWorldAxis( camera, yAxis, yaw/30.0 );
+		rotateAroundWorldAxis( scene, yAxis, -yaw/30.0 );
 		//camera.rotation.y -= yaw/30.0;
 
 	//camera.lookAt(new THREE.Vector3(0,0,0));
