@@ -1,6 +1,10 @@
+var xAxis = xAxis || new THREE.Vector3(1,0,0);
+var yAxis = yAxis || new THREE.Vector3(0,1,0);
+var zAxis = zAxis || new THREE.Vector3(0,0,1);
+
 //shortcut for returning a vector3
-function v(x,y,z){ 
-	return new THREE.Vector3(x,y,z); 
+function v(x,y,z){
+	return new THREE.Vector3(x,y,z);
 }
 
 //Things we may need to access later
@@ -16,7 +20,7 @@ var texts = [], textCoords3D = [];
 function setUpScene(){
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
-	renderer.setClearColor(0xEEEEEE);
+	renderer.setClearColor(0x000000);
 	renderer.clear();
 	document.body.appendChild( renderer.domElement );
 
@@ -32,24 +36,21 @@ function setUpScene(){
 			{vertexColors: true, size: 1.5});
 
 
-	/*Creating points to add to scatterplot
 	pointGeo = new THREE.Geometry();
 
 	points = new THREE.Points(pointGeo, mat);
 
-	scatterPlot.add(points);*/
+	scatterPlot.add(points);
 
 
 
 	//Creating axis to add to scatterplot
 	var axisGeo = new THREE.Geometry();
 
-
-
 	axisGeo.vertices.push(
 		v(-50, 0, 0), v(50, 0, 0),
-		 	v(0, -50, 0), v(0, 50, 0),
-			v(0, 0, -50), v(0, 0, 50)
+	 	v(0, -50, 0), v(0, 50, 0),
+		v(0, 0, -50), v(0, 0, 50)
 	);
 
 	var axisMat = new THREE.LineBasicMaterial({
@@ -81,40 +82,56 @@ var render = function () {
 function addWord(word){
 	//Make sure word is lower case
 	word = word.toLowerCase();
-	console.log(word);
 
 	var newPointGeo = new THREE.Geometry();
 
-	//Multiply by 50 right now for scaling - may change later
+	// word not found
+	if (dictionary[word] == null) {
+		document.getElementById('tip').innerHTML = "oops! that word wasn't found. what about..."
+		var random = Math.floor(Math.random() * 3147)
+		var example = ""
+		var i = 0
+		for (var word in dictionary) {
+			i ++
+			if (i >= random) {
+				example = word
+				break
+			}
+		}
+		return example
+	}
+
 	var newPoint = new THREE.Vector3(dictionary[word][0],
-		dictionary[word][1],dictionary[word][2]).multiplyScalar(50);
+	dictionary[word][1],dictionary[word][2]).multiplyScalar(50);
 
 	newPointGeo.vertices.push(newPoint);
 	//Current color is green, may change later
-	newPointGeo.colors.push(new THREE.Color(0x00ff00));
+	newPointGeo.colors.push(new THREE.Color('rgb('
+		+ parseInt(dictionary[word][0] * 255) + ','
+		+ parseInt(dictionary[word][1] * 255) + ','
+		+ parseInt(dictionary[word][2] * 255) + ')'));
 	var points2 = new THREE.Points(newPointGeo, mat);
 	points2.name = word;
 	scene.add(points2);
 
 	//Adding label
 	var text2 = document.createElement('div');
-		document.body.appendChild(text2);
+	document.body.appendChild(text2);
 	text2.style.position = 'absolute';
-	//text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
 	text2.style.width = 100;
 	text2.style.height = 100;
-	//text2.style.backgroundColor = "blue";
+	text2.style.backgroundColor = '#fff'
+	text2.style.padding = '2px'
 	text2.innerHTML = word;
 	var vec = toXYCoords(newPoint);
-
-
-
-	text2.style.top = vec.y + 'px';
-	text2.style.left = vec.x + 'px';
+	text2.style.top = (-2 + vec.y) + 'px';
+	text2.style.left = (6 + vec.x) + 'px';
 	texts.push(text2);
 	textCoords3D.push(newPoint);
 
 	render();
+
+	return ""
 
 }
 
@@ -187,11 +204,3 @@ function updateText(){
 setUpScene();
 //addPts();
 render();
-
-
-
-
-
-
-
-	

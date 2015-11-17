@@ -16,8 +16,8 @@ document.addEventListener('keydown', function(event) {
 	switch(event.keyCode){
 		case ENTER: //If enter, add word to graph
 			console.log(curStr);
-			addWord(curStr);
-			curStr = '';
+			var change = addWord(curStr);
+			curStr = change;
 			break;
 		case DELETE: //If delete, delete selected word.
 			if(lastInd!=null){
@@ -37,5 +37,5 @@ document.addEventListener('keydown', function(event) {
 
 	curHTMLStr.innerHTML = curStr;
 
-	
+
 });
