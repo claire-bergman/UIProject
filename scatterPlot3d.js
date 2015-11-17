@@ -2,6 +2,9 @@ var xAxis = xAxis || new THREE.Vector3(1,0,0);
 var yAxis = yAxis || new THREE.Vector3(0,1,0);
 var zAxis = zAxis || new THREE.Vector3(0,0,1);
 
+var added = {}
+requestAnimationFrame(animate)
+
 //shortcut for returning a vector3
 function v(x,y,z){
 	return new THREE.Vector3(x,y,z);
@@ -63,21 +66,11 @@ function setUpScene(){
 
 }
 
-
-
-
-
-
-
-
-
-
 //Literally just renders right not
 var render = function () {
 	requestAnimationFrame( render );
 	renderer.render(scene, camera);
-};
-
+}
 
 //Adds a word to the plot
 function addWord(word){
@@ -107,6 +100,11 @@ function addWord(word){
 	var newPoint = new THREE.Vector3(dictionary[word][0],
 	dictionary[word][1],dictionary[word][2]).multiplyScalar(50);
 
+	if (added[word] != null) {
+		moveToPoint(newPoint)
+		return ""
+	}
+
 	newPointGeo.vertices.push(newPoint);
 	//Current color is green, may change later
 	newPointGeo.colors.push(new THREE.Color('rgb('
@@ -120,34 +118,18 @@ function addWord(word){
 	//Adding label
 	var text2 = document.createElement('div');
 	document.body.appendChild(text2);
-	text2.style.position = 'absolute';
-	text2.style.width = 100;
-	text2.style.height = 100;
-	text2.style.backgroundColor = '#fff'
-	text2.style.padding = '2px'
+	text2.className = 'label'
 	text2.innerHTML = word;
 	var vec = toXYCoords(newPoint);
-	text2.style.top = (-2 + vec.y) + 'px';
-	text2.style.left = (6 + vec.x) + 'px';
 	texts.push(text2);
 	textCoords3D.push(newPoint);
 
 	// orient camera
-	var tween = new TWEEN.Tween(camera.target).to({
-    x: newPoint.x,
-    y: newPoint.y,
-    z: newPoint.z
-	}, 1000).easing(TWEEN.Easing.Exponential.Out).onUpdate(function () {
-		camera.lookAt(new THREE.Vector3(this.x, this.y, this.z))
-		updateText()
-	}).onComplete(function () {
-    camera.lookAt(newPoint)
-		updateText()
-	}).start()
+	moveToPoint(newPoint)
 
-	requestAnimationFrame(animate)
+	render()
 
-	render();
+	added[word] = true
 
 	return ""
 
@@ -208,11 +190,25 @@ function updateText(){
 
 	for (var i=0; i<texts.length; i++){
 		var vec = toXYCoords(textCoords3D[i]);
-		texts[i].style.top = vec.y + 'px';
-		texts[i].style.left = vec.x + 'px';
+		texts[i].style.top = -25 + vec.y + 'px';
+		texts[i].style.left = 5 + vec.x + 'px';
 
 	}
 
+}
+
+function moveToPoint(point) {
+	var tween = new TWEEN.Tween(camera.target).to({
+    x: point.x,
+    y: point.y,
+    z: point.z
+	}, 1000).easing(TWEEN.Easing.Exponential.Out).onUpdate(function () {
+		camera.lookAt(new THREE.Vector3(this.x, this.y, this.z))
+		updateText()
+	}).onComplete(function () {
+    camera.lookAt(point)
+		updateText()
+	}).start()
 }
 
 function animate(time) {
