@@ -102,33 +102,26 @@ document.addEventListener('keydown', function(event) {
 			addWord(match)
 			return
 		case ENTER: //If enter, add word to graph
-			var change = addWord(curStr, curGroup);
+			var change = addWord(curStr);
 			curStr = change
-			curHTMLStr.innerHTML = curStr;
 			break
 		case DELETE: //If delete, delete selected word.
 			if(lastInd!=null){
 			 removeWord(lastInd);
 			 lastInd = null;
 			}
-			curHTMLStr.innerHTML = curStr;
 			break
 		case BSPACE: //if backspace, remove last character from word
 			curStr = curStr.substring(0,curStr.length-1);
-			break;
-		case CTRL:
-			curGroup+=1;
-			senteces.push({sentence: curSentence, edges: edges});
-			curSentence = [];
-			edges = [];
 			break;
 		default: //Otherwise, add character to plot
 			if (event.which != null){
 				curStr = curStr + String.fromCharCode(event.keyCode);
 			}
-			curHTMLStr.innerHTML = curStr;
+		
 
 	}
+	curHTMLStr.innerHTML = curStr;
 
 
 

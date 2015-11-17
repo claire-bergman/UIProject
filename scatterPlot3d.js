@@ -23,9 +23,7 @@ var cameraParent = new THREE.Object3D();
 var pointGeo, points, mat;
 
 var words = [];
-var sentences = [];
-var curSentence = [];
-var edges = [];
+
 
 
 //Performs the basic setup
@@ -80,7 +78,7 @@ var render = function () {
 }
 
 //Adds a word to the plot
-function addWord(word, group){
+function addWord(word){
 	//Make sure word is lower case
 	word = word.toLowerCase();
 
@@ -139,14 +137,9 @@ function addWord(word, group){
 
 	text2.style.top = vec.y + 'px';
 	text2.style.left = vec.x + 'px';
-	var  curObj = createWord(word, text2, newPoint, group);// {name: word, html: text2, coordinates: newPoint, group: -1};
-	words.push(curObj);
 
 	//Add word to current sentence
-	curSentence.push(curObj);
-	if (curSentence.length > 1){
-		addLine(curSentence[curSentence.length-2], curSentence[curSentence.length-1]);
-	}
+	
 
 	//texts.push(text2);
 	//textCoords3D.push(newPoint);
@@ -162,9 +155,6 @@ function createWord(name, htmlText, coordinates, group){
 	return {name: name, html: htmlText, coordinates: coordinates, group: group};
 }
 
-function createWord(name, htmlText, coordinates, group){
-	return {name: name, html: htmlText, coordinates: coordinates, group: group};
-}
 
 function addLine(word1, word2){
 	var axisGeo = new THREE.Geometry();
