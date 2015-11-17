@@ -7,6 +7,7 @@ var curRoll=0,curYaw=0,curPitch=0;
 var q = new THREE.Quaternion();
 var firstFrame = null;
 var baseZoom = null;
+var baseFinger = null;
 
 
 Leap.loop(function (frame) {
@@ -15,13 +16,29 @@ Leap.loop(function (frame) {
 		baseZoom = frame.hands[0].palmPosition[1];
 	}
 
+	//Check that 
 	if (frame.hands[0] && frame.hands[0].sphereRadius > 40){
 		//setZoom(frame.hands[0]);
-
 	    frame.hands.forEach(function(hand, index){
-	    	// output.innerHTML = 'height: ' + hand.palmPosition[1];
+	    	var numExtended = 0;
+	    	var fingers = hand.fingers;
+	    	for (var i=0; i<fingers.length; i++){
+	    		var f = fingers[i];
+	    		if (f.extended)
+	    			numExtended +=1
+	    	}
+	    	if (numExtended == 1 && hand.indexFinger.extended){
+	    		var direction = hand.indexFinger.distal.direction();
+	    		if (baseFinger == null)
+	    			baseFinger = hand.indexFinger.distal.direction();
+	    		setRotation(direction[0] - baseFinger[0],direction[1] - baseFinger[1],direction[2] - baseFinger[2], 30);
+	    		console.log(direction);
+	    	}
+	    	else{
+	    		baseFinger = null;
+	    	}
 
-	    	 setRotation(hand.roll(), hand.pitch(), hand.yaw());
+	    	 setRotation(hand.roll(), hand.pitch(), hand.yaw(), 30.0);
 	    	 //setZoom();
 	    });
 	}
@@ -30,17 +47,17 @@ Leap.loop(function (frame) {
 
   }).use('screenPosition', {scale: 0.25});
 
-function setRotation(roll, pitch, yaw){
+function setRotation(roll, pitch, yaw, precision){
 
 	if (Math.abs(roll) > 0.4 && Math.abs(roll) > Math.abs(pitch) && Math.abs(roll) > Math.abs(yaw))
-		rotateAroundWorldAxis( scene, zAxis, roll/30.0 );
+		rotateAroundWorldAxis( scene, zAxis, roll/precision );
 		//camera.rotation.z -= roll/30.0;
 		//cameraParent.rotation.z -= roll/30.0;
 	if (Math.abs(pitch) > 0.4 && Math.abs(pitch) > Math.abs(roll) && Math.abs(pitch) > Math.abs(yaw))
-		rotateAroundWorldAxis( scene, xAxis, pitch/30.0 ); //- pitch
+		rotateAroundWorldAxis( scene, xAxis, pitch/precision ); //- pitch
 		//camera.rotation.x += pitch/30.0;
 	if (Math.abs(yaw) > 0.4 && Math.abs(yaw) > Math.abs(pitch) && Math.abs(yaw) > Math.abs(roll))
-		rotateAroundWorldAxis( scene, yAxis, -yaw/30.0 );
+		rotateAroundWorldAxis( scene, yAxis, -yaw/precision );
 		//camera.rotation.y -= yaw/30.0;
 
 	//camera.lookAt(new THREE.Vector3(0,0,0));
