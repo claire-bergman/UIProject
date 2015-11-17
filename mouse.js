@@ -12,7 +12,7 @@ var lastInd = null;
 var mousePos, isDown;
 
 function onMouseClick(e) {
-
+	isDown = false;
 	var curDist = 50;
 	var curInd = null;
 	for (var i=0; i<words.length; i++){
