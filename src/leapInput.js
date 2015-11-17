@@ -15,8 +15,11 @@ var q = new THREE.Quaternion();
 var firstFrame = null;
 var rotWorldMatrix;
 
+removeArrows();
+
 // Repeatedly check for data from controller
 Leap.loop(function (frame) {
+	removeArrows();
 
 	// Set zoom reference point to start from here
 	if (!firstFrame && frame.hands[0]){
@@ -61,18 +64,38 @@ Leap.loop(function (frame) {
 // Set rotation handler for flat hand and pointing positions
 // Precision is for type of hand gestures
 function setRotation(roll, pitch, yaw, precision) {
+		console.log("rot");
 
 	// Only rotate for a certain axis of hand orientation is significant
-	if (Math.abs(roll) > 0.4 && Math.abs(roll) > Math.abs(pitch) && Math.abs(roll) > Math.abs(yaw))
+	if (Math.abs(roll) > 0.4 && Math.abs(roll) > Math.abs(pitch) && Math.abs(roll) > Math.abs(yaw)){
 		rotateAroundWorldAxis( scene, zAxis, roll/precision );
+		if (roll>0)
+			addccwArrow();
+		else
+			addcwArrow();
+
+	}
 		//camera.rotation.z -= roll/30.0;
 		//cameraParent.rotation.z -= roll/30.0;
-	if (Math.abs(pitch) > 0.4 && Math.abs(pitch) > Math.abs(roll) && Math.abs(pitch) > Math.abs(yaw))
+	else if (Math.abs(pitch) > 0.4 && Math.abs(pitch) > Math.abs(roll) && Math.abs(pitch) > Math.abs(yaw)){
 		rotateAroundWorldAxis( scene, xAxis, pitch/precision ); //- pitch
 		//camera.rotation.x += pitch/30.0;
-	if (Math.abs(yaw) > 0.4 && Math.abs(yaw) > Math.abs(pitch) && Math.abs(yaw) > Math.abs(roll))
+		if (pitch > 0)
+			addUpArrows();
+		else
+			addDownArrows();
+	}
+	else if (Math.abs(yaw) > 0.4 && Math.abs(yaw) > Math.abs(pitch) && Math.abs(yaw) > Math.abs(roll)){
 		rotateAroundWorldAxis( scene, yAxis, -yaw/precision );
 		//camera.rotation.y -= yaw/30.0;
+		if (yaw < 0)
+			addLeftArrows();
+		else
+			addRightArrows();
+	}
+	else{
+		removeArrows();
+	}
 
 	//camera.lookAt(new THREE.Vector3(0,0,0));
 	//console.log( "x: " + camera.position.x + ", y: " + camera.position.y + ", z: " + camera.position.z);
@@ -103,6 +126,57 @@ function rotateAroundWorldAxis( object, axis, radians ) {
    	updateText();
 
 }
+
+
+function addLeftArrows(){
+document.getElementById("leftArrow1").style.display = "inline";
+document.getElementById("leftArrow2").style.display = "inline";
+}
+
+function addRightArrows(){
+document.getElementById("rightArrow1").style.display = "inline";
+document.getElementById("rightArrow2").style.display = "inline";
+
+}
+
+function addUpArrows(){
+document.getElementById("upArrow1").style.display = "inline";
+document.getElementById("upArrow2").style.display = "inline";
+
+}
+
+function addDownArrows(){
+document.getElementById("downArrow1").style.display = "inline";
+document.getElementById("downArrow2").style.display = "inline";
+
+}
+
+function addcwArrow(){
+document.getElementById("cwArrow").style.display = "inline";
+
+}
+
+function addccwArrow(){
+document.getElementById("ccwArrow").style.display = "inline";
+
+
+}
+
+function removeArrows(){
+document.getElementById("downArrow1").style.display = "none";
+document.getElementById("downArrow2").style.display = "none";
+document.getElementById("upArrow1").style.display = "none";
+document.getElementById("upArrow2").style.display = "none";
+document.getElementById("rightArrow1").style.display = "none";
+document.getElementById("rightArrow2").style.display = "none";
+document.getElementById("leftArrow1").style.display = "none";
+document.getElementById("leftArrow2").style.display = "none";
+document.getElementById("ccwArrow").style.display = "none";
+document.getElementById("cwArrow").style.display = "none";
+}
+
+
+
 
 /*function rotateObject(object, axis, angle){
 	q.setFromAxisAngle( axis, angle ); // axis must be normalized, angle in radians
