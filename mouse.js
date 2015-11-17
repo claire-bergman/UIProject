@@ -16,8 +16,8 @@ function onMouseClick(e) {
 
 	var curDist = 50;
 	var curInd = null;
-	for (var i=0; i<textCoords3D.length; i++){
-		var vec =  toXYCoords (textCoords3D[i]);
+	for (var i=0; i<words.length; i++){
+		var vec =  toXYCoords (words[i].coordinates);
 		console.log("Vec: x: " + vec.x + ", y: " + vec.y);
 		console.log("Mouse: x: " + e.clientX + ", y: " + e.clientY);
 		console.log("distance: " +  (Math.pow(vec.x-e.clientX, 2) + Math.pow(vec.y-e.clientY, 2)));
@@ -30,8 +30,8 @@ function onMouseClick(e) {
 	}
 	if (curInd != null){
 		if (lastInd !=null)
-			texts[lastInd].style.backgroundColor = "transparent";
-		texts[curInd].style.backgroundColor = "Blue";
+			words[lastInd].html.style.backgroundColor = "transparent";
+		words[curInd].html.style.backgroundColor = "Blue";
 		
 		lastInd = curInd;
 	}
@@ -74,7 +74,7 @@ function onMouseMove(e){
     e  = e || window.event; 
     var temp = mouseCoords(e); 
 
-    //translate camera
+    //translate camera if mouse held
     if (isDown){
 	    camera.position.x += mousePos.x  - temp.x;
 	    camera.position.y += temp.y - mousePos.y;

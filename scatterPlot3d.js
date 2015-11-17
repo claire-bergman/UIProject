@@ -9,7 +9,8 @@ var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeig
 var renderer = new THREE.WebGLRenderer();
 var cameraParent = new THREE.Object3D();
 var pointGeo, points, mat;
-var texts = [], textCoords3D = [];
+var words = [];
+var sentences = [];
 
 
 //Performs the basic setup
@@ -64,12 +65,6 @@ function setUpScene(){
 
 
 
-
-
-
-
-
-
 //Literally just renders right not
 var render = function () {
 	requestAnimationFrame( render );
@@ -111,27 +106,35 @@ function addWord(word){
 
 	text2.style.top = vec.y + 'px';
 	text2.style.left = vec.x + 'px';
-	texts.push(text2);
-	textCoords3D.push(newPoint);
+	var  curObj = createWord(word, text2, newPoint, -1);// {name: word, html: text2, coordinates: newPoint, group: -1};
+	words.push(curObj);
+	//texts.push(text2);
+	//textCoords3D.push(newPoint);
 
 	render();
 
 }
 
+function createWord(name, htmlText, coordinates, group){
+	return {name: name, html: htmlText, coordinates: coordinates, group: group};
+}
+
 function removeWord(i){
 	//remove from scene
-	var word = texts[i].innerHTML;
+	
+	//var word = texts[i].innerHTML;
+	var word = words[i].name;
 	console.log(word);
 	var object = scene.getObjectByName(word);
 	console.log(object);
 	scene.remove(object);
 
 	//remove from html
-	texts[i].parentNode.removeChild(texts[i]);
+	words[i].html.parentNode.removeChild(words[i].html);
 
 	//Remove from lists
-	texts.splice(i, 1);
-	textCoords3D.splice(i,1);
+	words.splice(i, 1);
+	//textCoords3D.splice(i,1);
 
 	//redraw
 	render();
@@ -150,8 +153,8 @@ function toXYCoords (pos) {
  		vector.applyAxisAngle(xAxis, scene.rotation.x);
     	vector.project(camera);
 
-        vector.x = (vector.x + 1)/2 * window.innerWidth;
-        vector.y = -(vector.y - 1)/2 * window.innerHeight;
+        vector.x = (vector.x + 1)/2 * renderer.getSize().width; //window.innerWidth;
+        vector.y = -(vector.y - 1)/2 * renderer.getSize().height;//window.innerHeight;
         return vector;
 }
 
@@ -168,15 +171,17 @@ function addPts(){
 	scene.add(points2);
 }
 
+
+//Updates the text labels based on updated camera and scene positions. 
 function updateText(){
 	console.log("updating");
 
-	for (var i=0; i<texts.length; i++){
+	for (var i=0; i<words.length; i++){
 			
-		var vec = toXYCoords(textCoords3D[i]);
+		var vec = toXYCoords(words[i].coordinates);
 		console.log("X: " + vec.x, ", y:" + vec.y);
-		texts[i].style.top = vec.y + 'px';
-		texts[i].style.left = vec.x + 'px';
+		words[i].html.style.top = vec.y + 'px';
+		words[i].html.style.left = vec.x + 'px';
 
 	}
 render();
