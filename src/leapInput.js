@@ -1,32 +1,45 @@
+/* Handles Leap input */
+
+// Keep track of hand orientation
+var curRoll=0,curYaw=0,curPitch=0;
+
+// Keep track of hand states
+var baseZoom = null;
+var baseFinger = null;
+
 var output = document.getElementById('output');
 var xAxis = new THREE.Vector3(1,0,0);
 var yAxis = new THREE.Vector3(0,1,0);
 var zAxis = new THREE.Vector3(0,0,1);
-
-var curRoll=0,curYaw=0,curPitch=0;
 var q = new THREE.Quaternion();
 var firstFrame = null;
-var baseZoom = null;
-var baseFinger = null;
+var rotWorldMatrix;
 
-
+// Repeatedly check for data from controller
 Leap.loop(function (frame) {
+
+	// Set zoom reference point to start from here
 	if (!firstFrame && frame.hands[0]){
 		firstFrame = frame;
 		baseZoom = frame.hands[0].palmPosition[1];
 	}
 
-	//Check that
-	if (frame.hands[0] && frame.hands[0].sphereRadius > 40){
+	// Check that fingers are sufficiently extended
+	if (frame.hands[0] && frame.hands[0].sphereRadius > 40) {
+
+			// Loop through hands
 	    frame.hands.forEach(function(hand, index){
 	    	var numExtended = 0;
 	    	var fingers = hand.fingers;
+				// Loop through fingers to tally them
 	    	for (var i=0; i<fingers.length; i++){
 	    		var f = fingers[i];
 	    		if (f.extended)
 	    			numExtended +=1
 	    	}
+				// If only one finger is extended...
 	    	if (numExtended == 1 && hand.indexFinger.extended){
+					// Set fine-grained position to direction of finger
 	    		var direction = hand.indexFinger.distal.direction();
 	    		if (baseFinger == null)
 	    			baseFinger = hand.indexFinger.distal.direction();
@@ -37,16 +50,19 @@ Leap.loop(function (frame) {
 	    		baseFinger = null;
 	    	}
 
-	    	 setRotation(hand.roll(), hand.pitch(), hand.yaw(), 30.0);
+				// Set broad rotation to orientation of hand
+	    	setRotation(hand.roll(), hand.pitch(), hand.yaw(), 30.0);
+
 	    });
 	}
 
-
-
   }).use('screenPosition', {scale: 0.25});
 
-function setRotation(roll, pitch, yaw, precision){
+// Set rotation handler for flat hand and pointing positions
+// Precision is for type of hand gestures
+function setRotation(roll, pitch, yaw, precision) {
 
+	// Only rotate for a certain axis of hand orientation is significant
 	if (Math.abs(roll) > 0.4 && Math.abs(roll) > Math.abs(pitch) && Math.abs(roll) > Math.abs(yaw))
 		rotateAroundWorldAxis( scene, zAxis, roll/precision );
 		//camera.rotation.z -= roll/30.0;
@@ -63,26 +79,29 @@ function setRotation(roll, pitch, yaw, precision){
 }
 
 
-
+// Set zoom handler for flat hand position
 function setZoom(hand){
-	if (hand){
 
+	if (hand){
 		var curY = hand.palmPosition[1];
 		if (Math.abs(baseZoom - curY) > 20){
 			camera.position.z -= (baseZoom-curY)/5.0;
 			updateText();
 		}
 	}
+
 }
 
-var rotWorldMatrix;
+// Rotate camera perspective around pivot point
 function rotateAroundWorldAxis( object, axis, radians ) {
+
     rotWorldMatrix = new THREE.Matrix4();
     rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
     rotWorldMatrix.multiply(object.matrix);        // pre-multiply
     object.matrix = rotWorldMatrix;
     object.rotation.setFromRotationMatrix(object.matrix);
    	updateText();
+
 }
 
 /*function rotateObject(object, axis, angle){

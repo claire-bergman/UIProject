@@ -1,9 +1,9 @@
 <!DOCTYPE html>
 <html>
-	<head>
-		<meta charset=utf-8>
-		<title>MUI Project</title>
-		<style>
+<head>
+<meta charset=utf-8>
+<title>MUI Project</title>
+<style>
 			body, html {
 				margin: 0;
 				font-family: 'Helvetica Neue';
@@ -56,16 +56,19 @@
 
 		<div id='expression'></div>
 
-		<script src="three.min.js"></script>
-		<script type='text/javascript' src="Tween.js"></script>
-		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
-		<script src="http://js.leapmotion.com/leap-0.6.3.js"></script>
-		<script src="http://js.leapmotion.com/leap-plugins-0.1.8.js"></script>
-		<script src="model.json"></script>
-		<script src="loadModel.js"></script>
-		<script src='keyboard.js'></script>
-		<script src="scatterPlot3d.js"></script>
-		<script src="leapInput.js"></script>
-		<script src="mouse.js"></script>
+		<!-- Import dependencies -->
+		<script type='text/javascript' src="lib/three.min.js"></script>
+		<script type='text/javascript' src="lib/Tween.js"></script>
+		<script type='text/javascript' src="lib/leap-0.6.3.js"></script>
+		<script type='text/javascript' src="lib/leap-plugins-0.1.8.js"></script>
+		<!-- Include data -->
+		<script src="data/model.json"></script>
+		<!-- Initialize -->
+		<script src="src/loadModel.js"></script>
+		<script src="src/keyboard.js"></script>
+		<script src="src/scatterPlot3d.js"></script>
+		<script src="src/leapInput.js"></script>
+		<script src="src/mouse.js"></script>
+
 	</body>
 </html>
