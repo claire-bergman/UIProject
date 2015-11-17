@@ -13,39 +13,72 @@ curHTMLStr.style.width = 100;
 curHTMLStr.style.height = 100;
 
 
+var material = new THREE.LineBasicMaterial({
+	color: 0xffffff
+})
+
 //Listen for key down
 document.addEventListener('keydown', function(event) {
 
-	console.log(event.keyCode)
-
 	switch(event.keyCode){
 		case ADD:
+			if (operations.length == 0) {
+				document.getElementById('expression').innerHTML = ""
+				for (var l = 0; l < lines.length; l++) scene.remove(lines[l])
+				lines = []
+			}
 			if (lastInd != null) {
 				operations.push(texts[lastInd].innerHTML)
 				operations.push("+")
+				var geometry = new THREE.Geometry()
+		  	geometry.vertices.push(new THREE.Vector3().copy(math))
 				math = math.add(textCoords3D[lastInd])
+				geometry.vertices.push(new THREE.Vector3().copy(math))
+				var line = new THREE.Line(geometry, material)
+				lines.push(line)
+				scene.add(line)
 				string = ""
 				operations.map(function(d,i){ string += d + "<br>" })
 				document.getElementById('expression').innerHTML = string
 			}
 			return
 		case SUB:
+			if (operations.length == 0) {
+				document.getElementById('expression').innerHTML = ""
+				for (var l = 0; l < lines.length; l++) scene.remove(lines[l])
+				lines = []
+			}
 			if (lastInd != null) {
 				operations.push(texts[lastInd].innerHTML)
 				operations.push("-")
+				var geometry = new THREE.Geometry()
+				geometry.vertices.push(new THREE.Vector3().copy(math))
 				math = math.sub(textCoords3D[lastInd])
+				geometry.vertices.push(new THREE.Vector3().copy(math))
+				var line = new THREE.Line(geometry, material)
+				lines.push(line)
+				scene.add(line)
 				string = ""
 				operations.map(function(d,i){ string += d + "<br>" })
 				document.getElementById('expression').innerHTML = string
 			}
-			math = new THREE.Vector3(0,0,0)
 			return
 		case EQUALS:
+			if (operations.length == 0) {
+				document.getElementById('expression').innerHTML = ""
+				for (var l = 0; l < lines.length; l++) scene.remove(lines[l])
+				lines = []
+			}
 			if (lastInd != null) {
 				operations.push(texts[lastInd].innerHTML)
 				operations.push("=")
+				var geometry = new THREE.Geometry()
+		  	geometry.vertices.push(new THREE.Vector3().copy(math))
 				math = math.add(textCoords3D[lastInd])
-				console.log(math)
+				geometry.vertices.push(new THREE.Vector3().copy(math))
+				var line = new THREE.Line(geometry, material)
+				lines.push(line)
+				scene.add(line)
 				var closest = Number.MAX_VALUE
 				var match
 				for (var word in dictionary) {
@@ -61,28 +94,33 @@ document.addEventListener('keydown', function(event) {
 				operations.map(function(d,i){ string += d + "<br>" })
 				document.getElementById('expression').innerHTML = string
 			}
+			math = new THREE.Vector3(0,0,0)
+			operations = []
+			addWord(match)
 			return
 		case ENTER: //If enter, add word to graph
-			var change = addWord(curStr);
-			curStr = change;
-			break;
+			var change = addWord(curStr)
+			curStr = change
+			curHTMLStr.innerHTML = curStr;
+			break
 		case DELETE: //If delete, delete selected word.
 			if(lastInd!=null){
 			 removeWord(lastInd);
 			 lastInd = null;
 			}
-			break;
+			curHTMLStr.innerHTML = curStr;
+			break
 		case BSPACE: //if backspace, remove last character from word
-			curStr = curStr.substring(0,curStr.length-1);
-			break;
+			curStr = curStr.substring(0,curStr.length-1)
+			curHTMLStr.innerHTML = curStr
+			break
 		default: //Otherwise, add character to plot
 			if (event.which != null){
 				curStr = curStr + String.fromCharCode(event.keyCode);
 			}
+			curHTMLStr.innerHTML = curStr;
 
 	}
-
-	curHTMLStr.innerHTML = curStr;
 
 
 });

@@ -8,6 +8,7 @@ var added = {}
 requestAnimationFrame(animate)
 var math = new THREE.Vector3(0,0,0)
 var operations = []
+var lines = []
 
 //shortcut for returning a vector3
 function v(x,y,z){
