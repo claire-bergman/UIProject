@@ -4,25 +4,68 @@
 		<meta charset=utf-8>
 		<title>MUI Project</title>
 		<style>
-			body { margin: 0; }
-			canvas { width: 100%; height: 100% }
+			body, html {
+				margin: 0;
+				font-family: 'Helvetica Neue';
+				text-transform: uppercase;
+				font-size: 10px;
+				letter-spacing: 1px;
+				overflow: hidden;
+				color: #fff;
+			}
+			canvas {
+				width: 100%;
+				height: 100%;
+			}
+			#expression {
+				text-align: right;
+				position: absolute;
+				top: 20px;
+				right: 20px;
+			}
+			#search {
+				position: absolute;
+				top: 20px;
+				left: 20px;
+			}
+			#curStr {
+				margin-top: 10px;
+				border: 1px solid #fff;
+				border-radius: 10px;
+				color: #fff;
+				padding: 10px;
+			}
+			.label {
+				position: absolute;
+				border: 1px solid #666;
+				border-radius: 2px;
+				color: #666;
+				padding: 3px;
+			}
+			.bright {
+				border: 1px solid #fff;
+				color: #fff;
+			}
 		</style>
 	</head>
 	<body>
 
 		<div id="output"></div>
 
-		<div id = "curStr"></div>
-		
+		<div id='search'><span id='tip'>begin typing to search!</span><div id="curStr"></div></div>
+
+		<div id='expression'></div>
+
 		<script src="three.min.js"></script>
+		<script type='text/javascript' src="Tween.js"></script>
 		<script src="http://d3js.org/d3.v3.min.js" charset="utf-8"></script>
 		<script src="http://js.leapmotion.com/leap-0.6.3.js"></script>
 		<script src="http://js.leapmotion.com/leap-plugins-0.1.8.js"></script>
-		<script src="model.json"></script>	
+		<script src="model.json"></script>
 		<script src="loadModel.js"></script>
 		<script src='keyboard.js'></script>
 		<script src="scatterPlot3d.js"></script>
 		<script src="leapInput.js"></script>
 		<script src="mouse.js"></script>
-	</body>	
+	</body>
 </html>

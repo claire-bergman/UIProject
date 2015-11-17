@@ -1,7 +1,6 @@
 
 
-
-
+document.addEventListener('click', onMouseDown, false);
 document.addEventListener('click', onMouseClick, false);
 document.addEventListener("mousewheel", onMouseWheel, false);
 document.addEventListener("DOMMouseScroll", onMouseWheel, false);
@@ -30,19 +29,18 @@ function onMouseClick(e) {
 	}
 	if (curInd != null){
 		if (lastInd !=null)
-			words[lastInd].html.style.backgroundColor = "transparent";
-		words[curInd].html.style.backgroundColor = "Blue";
-		
-		lastInd = curInd;
+			words[lastInd].html.className = 'label'
+			words[curInd].html.className = 'bright label'
+			lastInd = curInd;
 	}
 
-		
+
     /*var vectorMouse = new THREE.Vector3( //vector from camera to mouse
         -(window.innerWidth/2-e.clientX)*2/window.innerHeight,
         (window.innerHeight/2-e.clientY)*2/window.innerHeight,
         -1/Math.tan(22.5*Math.PI/180)); //22.5 is half of camera frustum angle 45 degree
     vectorMouse.applyQuaternion(camera.quaternion);
-    vectorMouse.normalize();        
+    vectorMouse.normalize();
 
     var vectorObject = new THREE.Vector3(); //vector from camera to object
     vectorObject.set(object.x - camera.position.x,
@@ -53,7 +51,7 @@ function onMouseClick(e) {
         //mouse's position is near object's position
     }*/
 
-    
+
 }
 
 
@@ -69,10 +67,10 @@ function onMouseWheel(e){
 
 
 //Called whenever the mouse moves
-function onMouseMove(e){ 
+function onMouseMove(e){
 	//Get mouse coordinates
-    e  = e || window.event; 
-    var temp = mouseCoords(e); 
+    e  = e || window.event;
+    var temp = mouseCoords(e);
 
     //translate camera if mouse held
     if (isDown){
@@ -82,18 +80,18 @@ function onMouseMove(e){
 	 }
 
 	mousePos = temp;
-} 
+}
 
 //Used by mouseMove to get the coordinates
-function mouseCoords(e){ 
-    if(e.pageX || e.pageY){ 
-        return {x:e.pageX, y:e.pageY}; 
-	} 
-    return { 
-        x:e.clientX + document.body.scrollLeft - document.body.clientLeft, 
-        y:e.clientY + document.body.scrollTop  - document.body.clientTop 
-    }; 
-} 
+function mouseCoords(e){
+    if(e.pageX || e.pageY){
+        return {x:e.pageX, y:e.pageY};
+	}
+    return {
+        x:e.clientX + document.body.scrollLeft - document.body.clientLeft,
+        y:e.clientY + document.body.scrollTop  - document.body.clientTop
+    };
+}
 
 function onMouseDown(e){
 	isDown = true;

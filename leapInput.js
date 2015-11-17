@@ -62,7 +62,7 @@ function setRotation(roll, pitch, yaw, precision){
 
 	//camera.lookAt(new THREE.Vector3(0,0,0));
 	//console.log( "x: " + camera.position.x + ", y: " + camera.position.y + ", z: " + camera.position.z);
-} 
+}
 
 
 
@@ -77,7 +77,7 @@ function setZoom(hand){
 	}
 }
 
-var rotWorldMatrix;      
+var rotWorldMatrix;
 function rotateAroundWorldAxis( object, axis, radians ) {
     rotWorldMatrix = new THREE.Matrix4();
     rotWorldMatrix.makeRotationAxis(axis.normalize(), radians);
@@ -85,7 +85,7 @@ function rotateAroundWorldAxis( object, axis, radians ) {
     object.matrix = rotWorldMatrix;
     object.rotation.setFromRotationMatrix(object.matrix);
    	updateText();
-} 
+}
 
 /*function rotateObject(object, axis, angle){
 	q.setFromAxisAngle( axis, angle ); // axis must be normalized, angle in radians

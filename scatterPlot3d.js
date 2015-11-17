@@ -1,6 +1,18 @@
+var xAxis = xAxis || new THREE.Vector3(1,0,0);
+var yAxis = yAxis || new THREE.Vector3(0,1,0);
+var zAxis = zAxis || new THREE.Vector3(0,0,1);
+
+var lastInd = null
+
+var added = {}
+requestAnimationFrame(animate)
+var math = new THREE.Vector3(0,0,0)
+var operations = []
+var lines = []
+
 //shortcut for returning a vector3
-function v(x,y,z){ 
-	return new THREE.Vector3(x,y,z); 
+function v(x,y,z){
+	return new THREE.Vector3(x,y,z);
 }
 
 //Things we may need to access later
@@ -9,6 +21,7 @@ var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeig
 var renderer = new THREE.WebGLRenderer();
 var cameraParent = new THREE.Object3D();
 var pointGeo, points, mat;
+
 var words = [];
 var sentences = [];
 var curSentence = [];
@@ -19,13 +32,14 @@ var edges = [];
 function setUpScene(){
 
 	renderer.setSize( window.innerWidth, window.innerHeight );
-	renderer.setClearColor(0xEEEEEE);
+	renderer.setClearColor(0x000000);
 	renderer.clear();
 	document.body.appendChild( renderer.domElement );
 
 
 	camera.position.z = 100;
-
+	camera.lookAt(new THREE.Vector3(0, 0, 0))
+	camera.target = new THREE.Vector3(0,0,0)
 
 	//Creating scatter plot
 	var scatterPlot = new THREE.Object3D();
@@ -35,24 +49,19 @@ function setUpScene(){
 			{vertexColors: true, size: 1.5});
 
 
-	/*Creating points to add to scatterplot
 	pointGeo = new THREE.Geometry();
 
 	points = new THREE.Points(pointGeo, mat);
 
-	scatterPlot.add(points);*/
-
-
+	scatterPlot.add(points);
 
 	//Creating axis to add to scatterplot
 	var axisGeo = new THREE.Geometry();
 
-
-
 	axisGeo.vertices.push(
 		v(-50, 0, 0), v(50, 0, 0),
-		 	v(0, -50, 0), v(0, 50, 0),
-			v(0, 0, -50), v(0, 0, 50)
+	 	v(0, -50, 0), v(0, 50, 0),
+		v(0, 0, -50), v(0, 0, 50)
 	);
 
 	var axisMat = new THREE.LineBasicMaterial({
@@ -64,47 +73,69 @@ function setUpScene(){
 
 }
 
-
-
-
 //Literally just renders right not
 var render = function () {
 	requestAnimationFrame( render );
 	renderer.render(scene, camera);
-};
-
+}
 
 //Adds a word to the plot
 function addWord(word, group){
 	//Make sure word is lower case
 	word = word.toLowerCase();
-	console.log(word);
 
 	var newPointGeo = new THREE.Geometry();
 
-	//Multiply by 50 right now for scaling - may change later
+	// word not found
+	if (dictionary[word] == null) {
+		document.getElementById('tip').innerHTML = "oops! that word wasn't found. what about..."
+		var random = Math.floor(Math.random() * 3147)
+		var example = ""
+		var i = 0
+		for (var word in dictionary) {
+			i ++
+			if (i >= random) {
+				example = word
+				break
+			}
+		}
+		return example
+	} else {
+		document.getElementById('tip').innerHTML = "great! use leap motion to navigate"
+	}
+
 	var newPoint = new THREE.Vector3(dictionary[word][0],
-		dictionary[word][1],dictionary[word][2]).multiplyScalar(50);
+	dictionary[word][1],dictionary[word][2]).multiplyScalar(50);
+
+	if (added[word] != null) {
+		moveToPoint(newPoint)
+		return ""
+	}
 
 	newPointGeo.vertices.push(newPoint);
 	//Current color is green, may change later
-	newPointGeo.colors.push(new THREE.Color(0x00ff00));
+	newPointGeo.colors.push(new THREE.Color('rgb('
+		+ parseInt(Math.abs(dictionary[word][0]) * 255) + ','
+		+ parseInt(Math.abs(dictionary[word][1]) * 255) + ','
+		+ parseInt(Math.abs(dictionary[word][2]) * 255) + ')'));
 	var points2 = new THREE.Points(newPointGeo, mat);
 	points2.name = word;
 	scene.add(points2);
 
 	//Adding label
 	var text2 = document.createElement('div');
-		document.body.appendChild(text2);
-	text2.style.position = 'absolute';
-	//text2.style.zIndex = 1;    // if you still don't see the label, try uncommenting this
-	text2.style.width = 100;
-	text2.style.height = 100;
-	//text2.style.backgroundColor = "blue";
+	document.body.appendChild(text2);
+	if (lastInd != null) words[lastInd].html.className = 'label'
+	text2.className = 'bright label'
 	text2.innerHTML = word;
 	var vec = toXYCoords(newPoint);
+	var curObj = createWord(word, text2, newPoint, -1) // {name: word, html: text2, coordinates: newPoint, group: -1};
+	words.push(curObj)
+	lastInd = words.length - 1
 
 
+	// orient camera
+	moveToPoint(newPoint)
 
 	text2.style.top = vec.y + 'px';
 	text2.style.left = vec.x + 'px';
@@ -119,9 +150,16 @@ function addWord(word, group){
 
 	//texts.push(text2);
 	//textCoords3D.push(newPoint);
+	render()
 
-	render();
+	added[word] = true
 
+	return ""
+
+}
+
+function createWord(name, htmlText, coordinates, group){
+	return {name: name, html: htmlText, coordinates: coordinates, group: group};
 }
 
 function createWord(name, htmlText, coordinates, group){
@@ -142,19 +180,17 @@ function addLine(word1, word2){
 	});
 	var axes = new THREE.LineSegments(axisGeo, axisMat);
 	axes.type = THREE.Lines;
-	scene.add(axes);	
+	scene.add(axes);
 	edges.push(axes);
 
 }
 
 function removeWord(i){
 	//remove from scene
-	
+
 	//var word = texts[i].innerHTML;
-	var word = words[i].name;
-	console.log(word);
+	var word = words[i].name
 	var object = scene.getObjectByName(word);
-	console.log(object);
 	scene.remove(object);
 
 	//remove from html
@@ -162,7 +198,6 @@ function removeWord(i){
 
 	//Remove from lists
 	words.splice(i, 1);
-	//textCoords3D.splice(i,1);
 
 	//redraw
 	render();
@@ -181,8 +216,8 @@ function toXYCoords (pos) {
  		vector.applyAxisAngle(xAxis, scene.rotation.x);
     	vector.project(camera);
 
-        vector.x = (vector.x + 1)/2 * renderer.getSize().width; //window.innerWidth;
-        vector.y = -(vector.y - 1)/2 * renderer.getSize().height;//window.innerHeight;
+        vector.x = (vector.x + 1)/2 * renderer.getSize().width
+        vector.y = -(vector.y - 1)/2 * renderer.getSize().height
         return vector;
 }
 
@@ -200,32 +235,41 @@ function addPts(){
 }
 
 
-//Updates the text labels based on updated camera and scene positions. 
+//Updates the text labels based on updated camera and scene positions.
 function updateText(){
 	console.log("updating");
 
 	for (var i=0; i<words.length; i++){
-			
-		var vec = toXYCoords(words[i].coordinates);
-		console.log("X: " + vec.x, ", y:" + vec.y);
-		words[i].html.style.top = vec.y + 'px';
-		words[i].html.style.left = vec.x + 'px';
+
+		var vec = toXYCoords(words[i].coordinates)
+		words[i].html.style.top = -25 + vec.y + 'px'
+		words[i].html.style.left = 5 + vec.x + 'px'
 
 	}
 render();
 }
 
+function moveToPoint(point) {
+	var tween = new TWEEN.Tween(camera.target).to({
+    x: point.x,
+    y: point.y,
+    z: point.z
+	}, 1000).easing(TWEEN.Easing.Exponential.Out).onUpdate(function () {
+		camera.lookAt(new THREE.Vector3(this.x, this.y, this.z))
+		updateText()
+	}).onComplete(function () {
+    camera.lookAt(point)
+		updateText()
+	}).start()
+}
+
+function animate(time) {
+	requestAnimationFrame(animate)
+	TWEEN.update(time)
+}
 
 
 //"main function"
 setUpScene();
 //addPts();
 render();
-
-
-
-
-
-
-
-	
