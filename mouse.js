@@ -1,23 +1,30 @@
 
 
-lastInd = null;
-document.addEventListener('click', onMouseDown, false);
+
+
+document.addEventListener('click', onMouseClick, false);
 document.addEventListener("mousewheel", onMouseWheel, false);
 document.addEventListener("DOMMouseScroll", onMouseWheel, false);
+document.addEventListener("mousemove", onMouseMove, false);
+document.addEventListener("mousedown", onMouseDown, false);
+document.addEventListener("mouseup", onMouseUp, false);
 
+var lastInd = null;
+var mousePos, isDown;
 
-function onMouseDown(e) {
+function onMouseClick(e) {
 
-	curDist = 50;
-	curInd = null;
+	var curDist = 50;
+	var curInd = null;
 	for (var i=0; i<textCoords3D.length; i++){
 		var vec =  toXYCoords (textCoords3D[i]);
 		console.log("Vec: x: " + vec.x + ", y: " + vec.y);
 		console.log("Mouse: x: " + e.clientX + ", y: " + e.clientY);
-		console.log("distance: " +  Math.pow(vec.x-e.clientX, 2) + Math.pow(vec.Y-e.clientY, 2))
+		console.log("distance: " +  (Math.pow(vec.x-e.clientX, 2) + Math.pow(vec.y-e.clientY, 2)));
 		if ((Math.pow(vec.x-e.clientX, 2) + Math.pow(vec.y-e.clientY, 2)) < curDist){
 			curDist = Math.pow(vec.x-e.clientX, 2) + Math.pow(vec.y-e.clientY, 2);
 			curInd = i;
+			console.log("Found at index: ", curInd);
 		}
 
 	}
@@ -49,6 +56,8 @@ function onMouseDown(e) {
     
 }
 
+
+//Takes care of zooming when the wheel is scrolled
 function onMouseWheel(e){
 	var delta = e.detail? e.detail*-2: e.wheelDelta/20.0;
 	console.log(delta);
@@ -56,4 +65,40 @@ function onMouseWheel(e){
 	updateText();
 	e.preventDefault();
 	return false;
+}
+
+
+//Called whenever the mouse moves
+function onMouseMove(e){ 
+	//Get mouse coordinates
+    e  = e || window.event; 
+    var temp = mouseCoords(e); 
+
+    //translate camera
+    if (isDown){
+	    camera.position.x += mousePos.x  - temp.x;
+	    camera.position.y += temp.y - mousePos.y;
+	    updateText();
+	 }
+
+	mousePos = temp;
+} 
+
+//Used by mouseMove to get the coordinates
+function mouseCoords(e){ 
+    if(e.pageX || e.pageY){ 
+        return {x:e.pageX, y:e.pageY}; 
+	} 
+    return { 
+        x:e.clientX + document.body.scrollLeft - document.body.clientLeft, 
+        y:e.clientY + document.body.scrollTop  - document.body.clientTop 
+    }; 
+} 
+
+function onMouseDown(e){
+	isDown = true;
+}
+
+function onMouseUp(e){
+	isDown = false;
 }

@@ -169,16 +169,17 @@ function addPts(){
 }
 
 function updateText(){
-
+	console.log("updating");
 
 	for (var i=0; i<texts.length; i++){
-			console.log("updating");
+			
 		var vec = toXYCoords(textCoords3D[i]);
+		console.log("X: " + vec.x, ", y:" + vec.y);
 		texts[i].style.top = vec.y + 'px';
 		texts[i].style.left = vec.x + 'px';
 
 	}
-
+render();
 }
 
 

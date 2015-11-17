@@ -15,13 +15,16 @@ Leap.loop(function (frame) {
 		baseZoom = frame.hands[0].palmPosition[1];
 	}
 
-	setZoom(frame.hands[0]);
+	if (frame.hands[0] && frame.hands[0].sphereRadius > 40){
+		//setZoom(frame.hands[0]);
 
-    frame.hands.forEach(function(hand, index){
-    	// output.innerHTML = 'height: ' + hand.palmPosition[1];
-    	 setRotation(hand.roll(), hand.pitch(), hand.yaw());
-    	 //setZoom();
-    });
+	    frame.hands.forEach(function(hand, index){
+	    	// output.innerHTML = 'height: ' + hand.palmPosition[1];
+
+	    	 setRotation(hand.roll(), hand.pitch(), hand.yaw());
+	    	 //setZoom();
+	    });
+	}
 
 
 
@@ -30,12 +33,15 @@ Leap.loop(function (frame) {
 function setRotation(roll, pitch, yaw){
 
 	if (Math.abs(roll) > 0.4 && Math.abs(roll) > Math.abs(pitch) && Math.abs(roll) > Math.abs(yaw))
-		rotateAroundWorldAxis( scene, zAxis, roll/30.0 );
+		rotateAroundWorldAxis( camera, zAxis, roll/30.0 );
+		//camera.rotation.z -= roll/30.0;
 		//cameraParent.rotation.z -= roll/30.0;
 	if (Math.abs(pitch) > 0.4 && Math.abs(pitch) > Math.abs(roll) && Math.abs(pitch) > Math.abs(yaw))
-		rotateAroundWorldAxis( scene, xAxis, -pitch/30.0 );
+		rotateAroundWorldAxis( camera, xAxis, pitch/30.0 ); //- pitch
+		//camera.rotation.x += pitch/30.0;
 	if (Math.abs(yaw) > 0.4 && Math.abs(yaw) > Math.abs(pitch) && Math.abs(yaw) > Math.abs(roll))
-		rotateAroundWorldAxis( scene, yAxis, yaw/30.0 );
+		rotateAroundWorldAxis( camera, yAxis, yaw/30.0 );
+		//camera.rotation.y -= yaw/30.0;
 
 	//camera.lookAt(new THREE.Vector3(0,0,0));
 	//console.log( "x: " + camera.position.x + ", y: " + camera.position.y + ", z: " + camera.position.z);
@@ -49,8 +55,8 @@ function setZoom(hand){
 		var curY = hand.palmPosition[1];
 		if (Math.abs(baseZoom - curY) > 20){
 			camera.position.z -= (baseZoom-curY)/5.0;
-				updateText();
-			}
+			updateText();
+		}
 	}
 }
 
