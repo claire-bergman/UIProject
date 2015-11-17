@@ -168,7 +168,7 @@ function addWord(word){
 	words.push(curObj)
 
 	// Set the last investigated word to the newly added word
-	selectedNodes.push(words.length - 1);
+	selectedNodes = [words.length - 1];
 
 	// Orient the camera to the newly added word
 	orientCamera(newPoint)
