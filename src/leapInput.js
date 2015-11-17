@@ -68,7 +68,7 @@ function setRotation(roll, pitch, yaw, precision) {
 
 	// Only rotate for a certain axis of hand orientation is significant
 	if (Math.abs(roll) > 0.4 && Math.abs(roll) > Math.abs(pitch) && Math.abs(roll) > Math.abs(yaw)){
-		rotateAroundWorldAxis( scene, zAxis, roll/precision );
+		rotateAroundWorldAxis( scene, zAxis, -roll/precision );
 		if (roll>0)
 			addccwArrow();
 		else
@@ -78,7 +78,7 @@ function setRotation(roll, pitch, yaw, precision) {
 		//camera.rotation.z -= roll/30.0;
 		//cameraParent.rotation.z -= roll/30.0;
 	else if (Math.abs(pitch) > 0.4 && Math.abs(pitch) > Math.abs(roll) && Math.abs(pitch) > Math.abs(yaw)){
-		rotateAroundWorldAxis( scene, xAxis, pitch/precision ); //- pitch
+		rotateAroundWorldAxis( scene, xAxis, -pitch/precision ); //- pitch
 		//camera.rotation.x += pitch/30.0;
 		if (pitch > 0)
 			addUpArrows();
@@ -86,7 +86,7 @@ function setRotation(roll, pitch, yaw, precision) {
 			addDownArrows();
 	}
 	else if (Math.abs(yaw) > 0.4 && Math.abs(yaw) > Math.abs(pitch) && Math.abs(yaw) > Math.abs(roll)){
-		rotateAroundWorldAxis( scene, yAxis, -yaw/precision );
+		rotateAroundWorldAxis( scene, yAxis, yaw/precision );
 		//camera.rotation.y -= yaw/30.0;
 		if (yaw < 0)
 			addLeftArrows();
