@@ -8,8 +8,8 @@ var xAxis = xAxis || new THREE.Vector3(1,0,0)
 var yAxis = yAxis || new THREE.Vector3(0,1,0)
 var zAxis = zAxis || new THREE.Vector3(0,0,1)
 
-// Index of last selected node
-var lastInd = null
+// list of selected nodes
+var selectedNodes = [];
 
 // Keep track of nodes that are already added
 var added = {}
@@ -148,7 +148,10 @@ function addWord(word){
 	document.body.appendChild(text2)
 
 	// If a previous word has been investigated, de-select it
-	if (lastInd != null) words[lastInd].html.className = 'label'
+	for(var i=0; i<selectedNodes.length;i++){
+		words[selectedNodes[i]].html.className = 'label'
+
+	}
 
 	// Select the newly added word
 	text2.className = 'bright label'
@@ -165,7 +168,7 @@ function addWord(word){
 	words.push(curObj)
 
 	// Set the last investigated word to the newly added word
-	lastInd = words.length - 1
+	selectedNodes.push(words.length - 1);
 
 	// Orient the camera to the newly added word
 	orientCamera(newPoint)
@@ -192,22 +195,7 @@ function createWord(name, htmlText, coordinates, group) {
 
 }
 
-// Helper function to add a line from one node-word to another
-function addLine(word1, word2) {
 
-	var axisGeo = new THREE.Geometry()
-	axisGeo.vertices.push(
-		word1.coordinates, word2.coordinates
-	)
-	var axisMat = new THREE.LineBasicMaterial({
-		color: 0x000000
-	})
-	var axes = new THREE.LineSegments(axisGeo, axisMat)
-	axes.type = THREE.Lines
-	scene.add(axes)
-	edges.push(axes)
-
-}
 
 // Remove a word from the interface
 function removeWord(i) {
@@ -246,7 +234,7 @@ function toXYCoords (pos) {
 
 	// Return vector as 2D coordinates based on screen size
   vector.x = (vector.x + 1)/2 * renderer.getSize().width
-  vector.y = -(vector.y - 1)/2 * renderer.getSize().height
+  vector.y = -(vector.y - 1)/2 * renderer.getSize().height + 50;
   return vector
 
 }

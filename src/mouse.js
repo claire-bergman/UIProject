@@ -20,29 +20,43 @@ function onMouseClick(e) {
 	var curDist = 50;
 	var curInd = null;
 
+	var coords = mouseCoords(e);	
+
 	// Need to loop through all of the words when the mouse is clicked
 	for (var i=0; i<words.length; i++){
 		var vec =  toXYCoords (words[i].coordinates);
-		console.log("Vec: x: " + vec.x + ", y: " + vec.y);
-		console.log("Mouse: x: " + e.clientX + ", y: " + e.clientY);
-		console.log("distance: " +  (Math.pow(vec.x-e.clientX, 2) + Math.pow(vec.y-e.clientY, 2)));
 		// If a word-node is close enough, save it as the current selection
-		if ((Math.pow(vec.x-e.clientX, 2) + Math.pow(vec.y-e.clientY, 2)) < curDist){
-			curDist = Math.pow(vec.x-e.clientX, 2) + Math.pow(vec.y-e.clientY, 2);
+		if ((Math.pow(vec.x-coords.x, 2) + Math.pow(vec.y-coords.y, 2)) < curDist){
+			curDist = Math.pow(vec.x-coords.x, 2) + Math.pow(vec.y-coords.y, 2);
 			curInd = i;
-			console.log("Found at index: ", curInd);
 		}
 	}
 
 	// Now if a close node was found...
 	if (curInd != null) {
-		if (lastInd != null)
+		var selectedInd = selectedNodes.indexOf(curInd);
+		if (ctrlDown && selectedInd >=0){
+			selectedNodes.splice(selectedInd, 1);
+			words[curInd].html.className = 'label';
+		}
+		else{
+			 if (!ctrlDown){
+				for (var i=0; i<selectedNodes.length; i++){
+					words[selectedNodes[i]].html.className = 'label';
+				}
+				selectedNodes = [];
+			}
+			selectedNodes.push(curInd);
+			words[curInd].html.className = 'bright label'
+		}
+		
+		/*if (lastInd != null)
 			// Toggle all other nodes to de-selected
 			words[lastInd].html.className = 'label'
 			// Toggle this node to selected
 			words[curInd].html.className = 'bright label'
 			// Set this node as the most recently selected one
-			lastInd = curInd
+			lastInd = curInd*/
 	}
 
 

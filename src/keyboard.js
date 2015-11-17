@@ -44,14 +44,14 @@ document.addEventListener('keydown', function(event) {
 				lines = []
 			}
 			// If a node has been selected...
-			if (lastInd != null) {
+			if (selectedNodes.length==1) {
 				// Add this operation to the expression listing
-				operations.push(words[lastInd].name)
+				operations.push(words[selectedNodes[0]].name)
 				operations.push("+")
 				// Add a line for this based on the previous state of the equation...
 				var geometry = new THREE.Geometry()
-		  	geometry.vertices.push(new THREE.Vector3().copy(math))
-				math = math.add(words[lastInd].coordinates)
+		  		geometry.vertices.push(new THREE.Vector3().copy(math))
+				math = math.add(words[selectedNodes[0]].coordinates)
 				// ...and the current state of the equation
 				geometry.vertices.push(new THREE.Vector3().copy(math))
 				var line = new THREE.Line(geometry, material)
@@ -73,13 +73,13 @@ document.addEventListener('keydown', function(event) {
 				lines = []
 			}
 			// If a node has been selected...
-			if (lastInd != null) {
+			if (selectedNodes.length==1) {
 				// Same basic process as ADD
-				operations.push(words[lastInd].name)
+				operations.push(words[selectedNodes[0]].name)
 				operations.push("-")
 				var geometry = new THREE.Geometry()
 				geometry.vertices.push(new THREE.Vector3().copy(math))
-				math = math.sub(words[lastInd].coordinates)
+				math = math.sub(words[selectedNodes[0]].coordinates)
 				geometry.vertices.push(new THREE.Vector3().copy(math))
 				var line = new THREE.Line(geometry, material)
 				lines.push(line)
@@ -99,13 +99,13 @@ document.addEventListener('keydown', function(event) {
 				lines = []
 			}
 			// If a node has been selected...
-			if (lastInd != null) {
+			if (selectedNodes.length==1) {
 				// Same basic process as ADD and SUBTRACT
-				operations.push(words[lastInd].name)
+				operations.push(words[selectedNodes[0]].name)
 				operations.push("=")
 				var geometry = new THREE.Geometry()
 		  	geometry.vertices.push(new THREE.Vector3().copy(math))
-				math = math.add(words[lastInd].coordinates)
+				math = math.add(words[selectedNodes[0]].coordinates)
 				geometry.vertices.push(new THREE.Vector3().copy(math))
 				var line = new THREE.Line(geometry, material)
 				lines.push(line)
@@ -143,17 +143,23 @@ document.addEventListener('keydown', function(event) {
 
 		// Delete to remove a word from the screen
 		case DELETE: //If delete, delete selected word.
-			if(lastInd!=null){
+			for (var i=0; i<selectedNodes.length; i++){
+				removeWord(selectedNodes[i]);
+			}
+			selectedNodes = [];
+			/*if(lastInd!=null){
 			 removeWord(lastInd);
 			 lastInd = null;
-			}
+			}*/
 			break
 
 		// Backspace to remove a character from the search field
 		case BSPACE:
 			curStr = curStr.substring(0,curStr.length-1);
 			break;
-
+		case CTRL:
+			ctrlDown = true;
+			break
 	 // Otherwise, add character to plot
 		default:
 			if (event.which != null){

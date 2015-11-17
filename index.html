@@ -20,12 +20,12 @@
 			#expression {
 				text-align: right;
 				position: absolute;
-				top: 20px;
+				top: 90px;
 				right: 20px;
 			}
 			#search {
 				position: absolute;
-				top: 20px;
+				top: 90px;
 				left: 20px;
 			}
 			#curStr {
@@ -46,9 +46,60 @@
 				border: 1px solid #fff;
 				color: #fff;
 			}
+			#menuBar {
+			    width: 100%;
+			    height: 50px;
+			    background-color: #000000;
+			}
+			ul {
+			    list-style-type: none;
+			    margin: 0;
+			    padding: 0;
+   				 margin-right: auto;
+   				 margin-left: auto;
+   				 width: 50%;
+			} 
+			li {
+
+			    display: inline;
+			     float: left;
+			}
+			
+
+			a {
+			    display: block;
+			}
+
+			.btn {
+			  -webkit-border-radius: 28;
+			  -moz-border-radius: 28;
+			  border-radius: 28px;
+			  font-family: 'Helvetica Neue';
+			  color: #ffffff;
+			  font-size: 12px;
+			  background: #000000;
+			  padding: 10px 20px 10px 20px;
+			  border: solid #ffffff 2px;
+			  text-decoration: none;
+
+			}
+
+			.btn:hover {
+			  background: #525252;
+			  text-decoration: none;
+			}
+
 		</style>
 	</head>
+	<div id="menuBar">
+		 <ul>
+	  <li><button class="btn" onclick="addSentence()">Add Sentence</button></li>
+	  <li><button class="btn" onclick="addMST">Add MST</button></li>
+	</ul> 
+</div>
 	<body>
+
+		
 
 		<div id="output"></div>
 
@@ -69,6 +120,7 @@
 		<script src="src/scatterPlot3d.js"></script>
 		<script src="src/leapInput.js"></script>
 		<script src="src/mouse.js"></script>
+		<script src="src/buttonUtil.js"></script>
 
 	</body>
 </html>
