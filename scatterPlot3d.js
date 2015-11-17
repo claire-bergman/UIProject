@@ -2,8 +2,12 @@ var xAxis = xAxis || new THREE.Vector3(1,0,0);
 var yAxis = yAxis || new THREE.Vector3(0,1,0);
 var zAxis = zAxis || new THREE.Vector3(0,0,1);
 
+var lastInd = null
+
 var added = {}
 requestAnimationFrame(animate)
+var math = new THREE.Vector3(0,0,0)
+var operations = []
 
 //shortcut for returning a vector3
 function v(x,y,z){
@@ -45,8 +49,6 @@ function setUpScene(){
 	points = new THREE.Points(pointGeo, mat);
 
 	scatterPlot.add(points);
-
-
 
 	//Creating axis to add to scatterplot
 	var axisGeo = new THREE.Geometry();
@@ -118,11 +120,14 @@ function addWord(word){
 	//Adding label
 	var text2 = document.createElement('div');
 	document.body.appendChild(text2);
-	text2.className = 'label'
+	if (lastInd != null) texts[lastInd].className = 'label'
+	text2.className = 'bright label'
 	text2.innerHTML = word;
 	var vec = toXYCoords(newPoint);
 	texts.push(text2);
 	textCoords3D.push(newPoint);
+	lastInd = textCoords3D.length - 1
+
 
 	// orient camera
 	moveToPoint(newPoint)

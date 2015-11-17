@@ -11,13 +11,19 @@
 				font-size: 10px;
 				letter-spacing: 1px;
 				overflow: hidden;
+				color: #fff;
 			}
 			canvas {
 				width: 100%;
 				height: 100%;
 			}
+			#expression {
+				text-align: right;
+				position: absolute;
+				top: 20px;
+				right: 20px;
+			}
 			#search {
-				color: #fff;
 				position: absolute;
 				top: 20px;
 				left: 20px;
@@ -31,10 +37,14 @@
 			}
 			.label {
 				position: absolute;
-				border: 1px solid #999;
+				border: 1px solid #666;
 				border-radius: 2px;
-				color: #fff;
+				color: #666;
 				padding: 3px;
+			}
+			.bright {
+				border: 1px solid #fff;
+				color: #fff;
 			}
 		</style>
 	</head>
@@ -43,6 +53,8 @@
 		<div id="output"></div>
 
 		<div id='search'><span id='tip'>begin typing to search!</span><div id="curStr"></div></div>
+
+		<div id='expression'></div>
 
 		<script src="three.min.js"></script>
 		<script type='text/javascript' src="Tween.js"></script>

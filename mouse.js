@@ -1,6 +1,5 @@
 
 
-lastInd = null;
 document.addEventListener('click', onMouseDown, false);
 
 function onMouseDown(e) {
@@ -20,19 +19,18 @@ function onMouseDown(e) {
 	}
 	if (curInd != null){
 		if (lastInd !=null)
-			texts[lastInd].style.backgroundColor = "transparent";
-		texts[curInd].style.backgroundColor = "Blue";
-		
-		lastInd = curInd;
+			texts[lastInd].className = 'label'
+			texts[curInd].className = 'bright label'
+			lastInd = curInd;
 	}
 
-		
+
     /*var vectorMouse = new THREE.Vector3( //vector from camera to mouse
         -(window.innerWidth/2-e.clientX)*2/window.innerHeight,
         (window.innerHeight/2-e.clientY)*2/window.innerHeight,
         -1/Math.tan(22.5*Math.PI/180)); //22.5 is half of camera frustum angle 45 degree
     vectorMouse.applyQuaternion(camera.quaternion);
-    vectorMouse.normalize();        
+    vectorMouse.normalize();
 
     var vectorObject = new THREE.Vector3(); //vector from camera to object
     vectorObject.set(object.x - camera.position.x,
@@ -43,5 +41,5 @@ function onMouseDown(e) {
         //mouse's position is near object's position
     }*/
 
-    
+
 }
