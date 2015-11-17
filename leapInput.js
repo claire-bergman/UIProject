@@ -16,9 +16,8 @@ Leap.loop(function (frame) {
 		baseZoom = frame.hands[0].palmPosition[1];
 	}
 
-	//Check that 
+	//Check that
 	if (frame.hands[0] && frame.hands[0].sphereRadius > 40){
-		//setZoom(frame.hands[0]);
 	    frame.hands.forEach(function(hand, index){
 	    	var numExtended = 0;
 	    	var fingers = hand.fingers;
@@ -39,7 +38,6 @@ Leap.loop(function (frame) {
 	    	}
 
 	    	 setRotation(hand.roll(), hand.pitch(), hand.yaw(), 30.0);
-	    	 //setZoom();
 	    });
 	}
 

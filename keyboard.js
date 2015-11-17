@@ -5,9 +5,10 @@ var ENTER = 13;
 var DELETE = 46;
 var BSPACE = 8;
 var CTRL = 17;
-var SUB = 45;
+var SUB = 189;
 var ADD = 187;
 var EQUALS = 32;
+var SHIFT = 16;
 var curHTMLStr = document.getElementById('curStr');
 var curGroup = 0;
 var ctrlDown = false;
@@ -24,6 +25,8 @@ var material = new THREE.LineBasicMaterial({
 document.addEventListener('keydown', function(event) {
 
 	switch(event.keyCode){
+		case SHIFT:
+			return
 		case ADD:
 			if (operations.length == 0) {
 				document.getElementById('expression').innerHTML = ""
@@ -118,7 +121,7 @@ document.addEventListener('keydown', function(event) {
 			if (event.which != null){
 				curStr = curStr + String.fromCharCode(event.keyCode);
 			}
-		
+
 
 	}
 	curHTMLStr.innerHTML = curStr;
