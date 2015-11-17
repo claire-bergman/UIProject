@@ -28,11 +28,11 @@ document.addEventListener('keydown', function(event) {
 				lines = []
 			}
 			if (lastInd != null) {
-				operations.push(texts[lastInd].innerHTML)
+				operations.push(words[lastInd].name)
 				operations.push("+")
 				var geometry = new THREE.Geometry()
 		  	geometry.vertices.push(new THREE.Vector3().copy(math))
-				math = math.add(textCoords3D[lastInd])
+				math = math.add(words[lastInd].coordinates)
 				geometry.vertices.push(new THREE.Vector3().copy(math))
 				var line = new THREE.Line(geometry, material)
 				lines.push(line)
@@ -49,11 +49,11 @@ document.addEventListener('keydown', function(event) {
 				lines = []
 			}
 			if (lastInd != null) {
-				operations.push(texts[lastInd].innerHTML)
+				operations.push(words[lastInd].name)
 				operations.push("-")
 				var geometry = new THREE.Geometry()
 				geometry.vertices.push(new THREE.Vector3().copy(math))
-				math = math.sub(textCoords3D[lastInd])
+				math = math.sub(words[lastInd].coordinates)
 				geometry.vertices.push(new THREE.Vector3().copy(math))
 				var line = new THREE.Line(geometry, material)
 				lines.push(line)
@@ -70,11 +70,11 @@ document.addEventListener('keydown', function(event) {
 				lines = []
 			}
 			if (lastInd != null) {
-				operations.push(texts[lastInd].innerHTML)
+				operations.push(words[lastInd].name)
 				operations.push("=")
 				var geometry = new THREE.Geometry()
 		  	geometry.vertices.push(new THREE.Vector3().copy(math))
-				math = math.add(textCoords3D[lastInd])
+				math = math.add(words[lastInd].coordinates)
 				geometry.vertices.push(new THREE.Vector3().copy(math))
 				var line = new THREE.Line(geometry, material)
 				lines.push(line)

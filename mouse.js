@@ -6,8 +6,8 @@ function onMouseDown(e) {
 
 	curDist = 50;
 	curInd = null;
-	for (var i=0; i<textCoords3D.length; i++){
-		var vec =  toXYCoords (textCoords3D[i]);
+	for (var i=0; i<words.length; i++){
+		var vec =  toXYCoords (words[i].coordinates);
 		console.log("Vec: x: " + vec.x + ", y: " + vec.y);
 		console.log("Mouse: x: " + e.clientX + ", y: " + e.clientY);
 		console.log("distance: " +  Math.pow(vec.x-e.clientX, 2) + Math.pow(vec.Y-e.clientY, 2))
@@ -19,8 +19,8 @@ function onMouseDown(e) {
 	}
 	if (curInd != null){
 		if (lastInd !=null)
-			texts[lastInd].className = 'label'
-			texts[curInd].className = 'bright label'
+			words[lastInd].html.className = 'label'
+			words[curInd].html.className = 'bright label'
 			lastInd = curInd;
 	}
 

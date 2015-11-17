@@ -21,7 +21,8 @@ var camera = new THREE.PerspectiveCamera( 45, window.innerWidth/window.innerHeig
 var renderer = new THREE.WebGLRenderer();
 var cameraParent = new THREE.Object3D();
 var pointGeo, points, mat;
-var texts = [], textCoords3D = [];
+var words = []
+var sentences = []
 
 
 //Performs the basic setup
@@ -121,13 +122,13 @@ function addWord(word){
 	//Adding label
 	var text2 = document.createElement('div');
 	document.body.appendChild(text2);
-	if (lastInd != null) texts[lastInd].className = 'label'
+	if (lastInd != null) words[lastInd].html.className = 'label'
 	text2.className = 'bright label'
 	text2.innerHTML = word;
 	var vec = toXYCoords(newPoint);
-	texts.push(text2);
-	textCoords3D.push(newPoint);
-	lastInd = textCoords3D.length - 1
+	var curObj = createWord(word, text2, newPoint, -1) // {name: word, html: text2, coordinates: newPoint, group: -1};
+	words.push(curObj)
+	lastInd = words.length - 1
 
 
 	// orient camera
@@ -141,20 +142,21 @@ function addWord(word){
 
 }
 
+function createWord(name, htmlText, coordinates, group){
+	return {name: name, html: htmlText, coordinates: coordinates, group: group};
+}
+
 function removeWord(i){
 	//remove from scene
-	var word = texts[i].innerHTML;
-	console.log(word);
+	var word = words[i].name
 	var object = scene.getObjectByName(word);
-	console.log(object);
 	scene.remove(object);
 
 	//remove from html
-	texts[i].parentNode.removeChild(texts[i]);
+	words[i].html.parentNode.removeChild(words[i].html);
 
 	//Remove from lists
-	texts.splice(i, 1);
-	textCoords3D.splice(i,1);
+	words.splice(i, 1);
 
 	//redraw
 	render();
@@ -173,8 +175,8 @@ function toXYCoords (pos) {
  		vector.applyAxisAngle(xAxis, scene.rotation.x);
     	vector.project(camera);
 
-        vector.x = (vector.x + 1)/2 * window.innerWidth;
-        vector.y = -(vector.y - 1)/2 * window.innerHeight;
+        vector.x = (vector.x + 1)/2 * renderer.getSize().width
+        vector.y = -(vector.y - 1)/2 * renderer.getSize().height
         return vector;
 }
 
@@ -194,10 +196,10 @@ function addPts(){
 function updateText(){
 
 
-	for (var i=0; i<texts.length; i++){
-		var vec = toXYCoords(textCoords3D[i]);
-		texts[i].style.top = -25 + vec.y + 'px';
-		texts[i].style.left = 5 + vec.x + 'px';
+	for (var i=0; i<words.length; i++){
+		var vec = toXYCoords(words[i].coordinates);
+		words[i].html.style.top = -25 + vec.y + 'px';
+		words[i].html.style.left = 5 + vec.x + 'px';
 
 	}
 
